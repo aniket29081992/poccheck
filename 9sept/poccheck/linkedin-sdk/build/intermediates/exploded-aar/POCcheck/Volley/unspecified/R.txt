@@ -1,0 +1,3 @@
+int attr rounded 0x7f010000
+int[] styleable com_android_volley_networkimageview { 0x7f010000 }
+int styleable com_android_volley_networkimageview_rounded 0
