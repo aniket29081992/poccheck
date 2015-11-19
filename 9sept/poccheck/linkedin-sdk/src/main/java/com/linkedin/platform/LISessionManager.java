@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.linkedin.android.mobilesdk.R;
 import com.linkedin.platform.errors.LIAppErrorCode;
@@ -178,6 +179,7 @@ public class LISessionManager {
         }
         return TextUtils.join(" ", perms);
     }
+
 
 
     /**

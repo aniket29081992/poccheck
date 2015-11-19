@@ -19,6 +19,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISession;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.errors.LIDeepLinkError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.utils.Scope;
+
 
 
 import com.facebook.CallbackManager;
@@ -39,6 +50,8 @@ import com.google.android.gms.plus.model.people.Person;
 import com.mesh.meshgeek.poccheck.R;
 
 import com.twitter.sdk.android.Twitter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 import com.twitter.sdk.android.core.Callback;
@@ -86,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
 
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String PACKAGE_MOBILE_SDK_SAMPLE_APP = "com.mesh.meshgeek.poccheck";
+
+
        /*
         * A flag indicating that a PendingIntent is in progress and prevents us
         * from starting further intents.
@@ -119,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Activity activity=this;
+        final Activity thisActivity = this;
+        setUpdateState();
+
         //  LISessionManager.getInstance(getApplicationContext()).init(AccessToken access);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
@@ -129,9 +150,47 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
 
 
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
+        helloButton=(Button)findViewById(R.id.hello);
+
+        helloButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LISessionManager.getInstance(getApplicationContext()).init(thisActivity,buildScope(),new AuthListener(){
+                    @Override
+                    public void onAuthSuccess() {
+                        setUpdateState();
+                        String url = "https://api.linkedin.com/v1/people/~:(id, first-name, skills)";
+
+                        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+                        apiHelper.getRequest(getApplicationContext(), url, new ApiListener() {
+                            @Override
+                            public void onApiSuccess(ApiResponse apiResponse) {
+                                System.out.println("connections" + apiResponse);
+                                // Success!
+                            }
+
+                            @Override
+                            public void onApiError(LIApiError liApiError) {
+                                System.out.println("sadness");
+                                // Error making GET request!
+                            }
+                        });
+                        Toast.makeText(getApplicationContext(), "success" + LISessionManager.getInstance(getApplicationContext()).getSession().getAccessToken(), Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void onAuthError(LIAuthError error) {
+                        setUpdateState();
+
+                        Toast.makeText(getApplicationContext(), "failed " + error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.mesh.meshgeek.poccheck",
@@ -376,12 +435,25 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                 mGoogleApiClient.connect();
             }
         }
+LISessionManager.getInstance(getApplicationContext()).onActivityResult(this,requestCode,resultCode,data);
 
         // Pass the activity result to the login button.
         loginButton.onActivityResult(requestCode, resultCode, data);
 
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+    private void setUpdateState() {
+        LISessionManager sessionManager = LISessionManager.getInstance(getApplicationContext());
+        LISession session = sessionManager.getSession();
+        boolean accessTokenValid = session.isValid();
+
+
+    }
+
+    private static Scope buildScope() {
+        return Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE);
+    }
+
     protected void onStart() {
         super.onStart();
 

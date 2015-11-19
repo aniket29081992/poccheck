@@ -154,7 +154,7 @@ public class APIHelper {
      * @param url         rest api endpoint to call. example: "https://api.linkedin.com/v1/people/~:(first-name,last-name,public-profile-url)"
      * @param apiListener
      */
-    public void getRequest(Context context, String url, ApiListener apiListener) {
+    public  void getRequest(Context context, String url, ApiListener apiListener) {
         request(context, Request.Method.GET, url, null, apiListener);
     }
 
