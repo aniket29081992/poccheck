@@ -1,0 +1,192 @@
+import urllib2
+import urllib
+import math
+import pymongo
+import simplejson
+import time
+from pygoogle import pygoogle
+from pymongo import MongoClient
+#client = pymongo.MongoClient('54.169.129.170:27017')
+#client.buddydb.authenticate('buddyadmin','memongosh1')
+uri="mongodb://buddyadmin:memongosh1@54.169.129.170:27017/buddydb"
+client=pymongo.MongoClient(uri)
+db=client.buddydb
+coll=db.users.find({},{"gender":1,"email":1,"name":1})
+st=[]
+p=0
+for document in coll:
+    '''
+    g=pygoogle(document["name"])
+    time.sleep(60)
+    print(g.get_urls())
+                        
+      '''
+    query=document["name"]
+    
+    
+    url = ('https://ajax.googleapis.com/ajax/services/search/web'
+       '?v=1.0&q=Paris%20Hilton')
+
+    request = urllib2.Request(
+    url, None, {'Referer':""})
+    response = urllib2.urlopen(request)
+    time.sleep(30)
+# Process the JSON string.
+    results = simplejson.load(response)
+    print(results)
+
+
+print(p)    
+url='https://about.me/iamgaurav'
+#url='https://www.linkedin.com/pub/rubaina-wasi/6b/820/6a'
+url2='https://www.facebook.com/public/Gaurav-Jagtap'
+#url2='https://www.facebook.com/public/Rubaina-Wasi'
+#url3='https://campusdiaries.com/rubainawasi93'
+url3='https://www.linkedin.com/pub/dir/Gaurav/Jagtap'
+url4='https://www.quora.com/I-have-done-nothing-great-in-my-life-I-am-a-mechanical-engineer-but-am-now-working-in-software-support-role-I-failed-pathetically-at-CAT-in-2013-and-am-targeting-CAT-2014-for-the-third-time-Today-15-August-my-birthday-I-feel-like-dying-and-am-depressed-What-can-I-do#!n=48'
+#url4='https://campusdiaries.com/rubainawasi93?qt-profile_menu=1'
+url5='https://www.gohachi.com/directory/is'
+#url5='https://plus.google.com/106363678497698100386'
+url6='https://www.youtube.com/channel/UCGJvNSYMpp5C3S-FnxPqR_w'
+#url6='https://plus.google.com/106363678497698100386/photos'
+#url7='http://www.yatedo.com/search/profil?c=normal&q=companyname%3A%28N.I.F.T+-+BANGALORE%29&rlg=en&uid=-1&start=128&p=9'
+url7='https://plus.google.com/106363678497698100386/about'
+#url8='http://wasi.alexanderstreet.com/browse/allsubjects'
+url8='http://www.programminggeek.in/2015/08/codevita-season-iv-round1-result.html'
+#url9='http://www.researchgate.net/publication/231741515_Semantic_memory_recognition_is_supported_by_intrinsic_recollection-like_processes_The_butcher_on_the_bus_revisited'
+url9='http://schach.wienerzeitung.at/tnr69908.aspx?lan=0&art=6&wi=821'
+gfd=[]
+countname=[]
+countemail=[]
+countphone=[]
+countcollege=[]
+countcourse=[]
+pagename=1
+pageemail=1
+pagephone=1
+pagecollege=1
+pagecourse=1
+invername=[]
+inveremail=[]
+inverphone=[]
+invercollege=[]
+invercourse=[]
+tfid=[]
+"""
+name='Rubaina Wasi'
+email='rubainawasi93@gmail.com'
+phone='9538296970'
+college='Christ University'
+course=' Journalism'
+"""
+name='Gaurav Jagtap'
+email='hello@iamgaurav.com'
+phone='9036410694'
+college='PESIT'
+course='Engineering'
+req=urllib2.Request(url,headers={'User-Agent': 'Mozilla/5.0'})
+sock=urllib2.urlopen(req)
+
+htmls=sock.read()
+gfd.append(htmls.decode("utf-8"))
+sock.close()
+
+
+req2=urllib2.Request(url2,headers={'User-Agent': 'Mozilla/5.0'})
+sock2=urllib2.urlopen(req2)
+
+htmls2=sock2.read()
+gfd.append(htmls2.decode("utf-8"))
+sock2.close()
+
+req3=urllib2.Request(url3,headers={'User-Agent': 'Mozilla/5.0'})
+sock3=urllib2.urlopen(req3)
+
+htmls3=sock3.read()
+a3=htmls3.decode("utf-8")
+gfd.append(a3)
+sock3.close()
+
+req4=urllib2.Request(url4,headers={'User-Agent': 'Mozilla/5.0'})
+sock4=urllib2.urlopen(req4)
+
+htmls4=sock4.read()
+a4=htmls4.decode("utf-8")
+gfd.append(a4)
+sock4.close()
+
+req5=urllib2.Request(url5,headers={'User-Agent': 'Mozilla/5.0'})
+sock5=urllib2.urlopen(req5)
+
+htmls5=sock5.read()
+a5=htmls5.decode("utf-8")
+gfd.append(a5)
+sock5.close()
+
+req6=urllib2.Request(url6,headers={'User-Agent': 'Mozilla/5.0'})
+sock6=urllib2.urlopen(req6)
+
+htmls6=sock6.read()
+a6=htmls6.decode("utf-8")
+gfd.append(a6)
+sock6.close()
+
+
+req7=urllib2.Request(url7,headers={'User-Agent': 'Mozilla/5.0'})
+sock7=urllib2.urlopen(req7)
+
+htmls7=sock7.read()
+a7=htmls7.decode("utf-8")
+sock7.close()
+gfd.append(a7)
+
+req8=urllib2.Request(url8,headers={'User-Agent': 'Mozilla/5.0'})
+sock8=urllib2.urlopen(req8)
+
+htmls8=sock8.read()
+a8=htmls8.decode("utf-8")
+
+sock8.close()
+gfd.append(a8)
+req9=urllib2.Request(url9,headers={'User-Agent': 'Mozilla/5.0'})
+sock9=urllib2.urlopen(req9)
+
+htmls9=sock9.read()
+a9=htmls9.decode("utf-8")
+gfd.append(a9)
+sock9.close()
+
+
+
+u=len(gfd)
+print(u)
+
+for t in range(u):
+    print(t)
+    countname.append(gfd[t].count(name))
+    countemail.append(gfd[t].count(email))
+    countphone.append(gfd[t].count(phone))
+    countcollege.append(gfd[t].count(college))
+    countcourse.append(gfd[t].count(course))
+    if gfd[t].count(name)!=0:
+        pagename=pagename+1
+    if gfd[t].count(email)!=0:
+        pageemail=pageemail+1
+    if gfd[t].count(phone)!=0:
+        pagephone=pagephone+1
+    if gfd[t].count(college)!=0:
+        pagecollege=pagecollege+1
+    if gfd[t].count(course)!=0:
+        pagecourse=pagecourse+1
+print(pagename,pageemail,pagephone,pagecollege,pagecourse)        
+  
+            
+for i in range(u):
+    if countname[i]==0 and countemail[i]==0 and countphone[i]==0:
+        tfid.append(0)
+    else:
+        x=countname[i]*math.log10(9/pagename)+countemail[i]*math.log10(9/pageemail)+countphone[i]*math.log10(9/pagephone)+countcollege[i]*math.log10(9/pagecollege)+countcourse[i]*math.log10(9/pagecourse)
+        tfid.append(x)
+    
+print(countname,countemail,countphone,countcollege,countcourse)
+print(tfid)
