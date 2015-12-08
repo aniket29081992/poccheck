@@ -1,0 +1,97 @@
+var http=require("https");
+var url = 'https://affiliate-api.flipkart.net/affiliate/api/carehello.json';
+var bodyParser = require('body-parser');
+var monk=require('monk');
+
+var db = monk('54.169.129.170:27017/meshdb', {
+    username : 'buddyadmin',
+    password : 'memongosh1'
+});
+if(!db){
+    console.log('no connection')
+}
+if(db){
+    console.log('Digo ')
+}
+var jsonParser = bodyParser.json();
+var collection=db.get('weateher');
+var request=http.get(url,function(response){
+var buffer="";
+var map={};
+var api="";
+var data2="";
+response.on("data",function(chunk){
+buffer+=chunk;});
+response.on("end",function(err)
+{
+var data=JSON.parse(buffer);
+
+ api=data.apiGroups.affiliate.apiListings.laptops.availableVariants["v0.1.0"].get;
+//console.log(api);
+var i=0;
+
+while(api!=null) {
+
+    var request2 = require('request');
+    var username = 'care@hellobuddy.in'
+    var password = 'buddyemi'
+    var options = {
+        //   url: api,
+        auth: {
+
+            username: username,
+            password: password
+        },
+        //  method: 'GET',
+        headers: { //We can define headers too
+            'Fk-Affiliate-Id': 'carehello',
+            'Fk-Affiliate-Token': 'c4ccb69921b94f5ab7c7cb3936ab1291'
+        }
+    }
+try{
+    var requestnew = require('sync-request');
+    var res = requestnew('GET', api, options);}
+    catch(ex){console.log(ex);}
+    //console.log(JSON.parse(res.getBody()));
+
+//    request2(options, function (err, res, body) {
+//        if (err) {
+//            console.dir(err)
+//            return
+//        }
+//
+//
+    data2 = JSON.parse(res.getBody());
+    //  console.dir(data2.nextUrl);
+
+    api = data2.nextUrl;
+    console.log(api);
+
+    var key, count = 0;
+    for (key in data2.productInfoList) {
+        if (data2.productInfoList.hasOwnProperty(key)) {
+            if (map[data2.productInfoList[count]["productBaseInfo"].productIdentifier.productId] != 1)
+            {
+            collection.insert(data2,function(err1,result1)
+            {
+              console.log(err1);
+            })
+                map[data2.productInfoList[count]["productBaseInfo"].productIdentifier.productId] = 1;}
+            //      console.log(data2.productInfoList[count]["productBaseInfo"].productIdentifier.productId);
+            count++;
+        }
+
+
+    }
+
+//        //console.log(map[data2.productInfoList[count - 1]["productBaseInfo"].productIdentifier.productId]);
+//    });
+//i++;
+
+}
+
+});
+
+
+});
+
